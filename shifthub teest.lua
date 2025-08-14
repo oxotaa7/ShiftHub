@@ -36,7 +36,8 @@ local keyWindow = Rayfield:CreateWindow({
 local keyTab = keyWindow:CreateTab("🔑 Key")
 local userKey = ""
 
-keyTab:CreateInput({
+-- Input de senha mascarada
+local keyInputObj = keyTab:CreateInput({
     Name = "Your Key",
     PlaceholderText = "Enter your key here",
     RemoveTextAfterFocusLost = false,
@@ -44,6 +45,11 @@ keyTab:CreateInput({
         userKey = value
     end
 })
+
+-- Tenta mascarar o input como senha (TextMasked)
+if typeof(keyInputObj) == "Instance" and keyInputObj:IsA("TextBox") then
+    keyInputObj.TextMasked = true
+end
 
 keyTab:CreateButton({
     Name = "Validate Key",
