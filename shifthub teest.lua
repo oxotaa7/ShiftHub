@@ -36,8 +36,7 @@ local keyWindow = Rayfield:CreateWindow({
 local keyTab = keyWindow:CreateTab("🔑 Key")
 local userKey = ""
 
--- Input de senha mascarada
-local keyInputObj = keyTab:CreateInput({
+keyTab:CreateInput({
     Name = "Your Key",
     PlaceholderText = "Enter your key here",
     RemoveTextAfterFocusLost = false,
@@ -46,10 +45,20 @@ local keyInputObj = keyTab:CreateInput({
     end
 })
 
--- Tenta mascarar o input como senha (TextMasked)
-if typeof(keyInputObj) == "Instance" and keyInputObj:IsA("TextBox") then
-    keyInputObj.TextMasked = true
-end
+-- SISTEMA DE MASCARAR O CAMPO DA KEY
+task.spawn(function()
+    task.wait(1.5)  -- Pode aumentar se não mascarar de primeira
+    local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    for _, gui in ipairs(PlayerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui.Name:find("Shift Hub") then
+            for _, v in ipairs(gui:GetDescendants()) do
+                if v:IsA("TextBox") and v.PlaceholderText == "Enter your key here" then
+                    v.TextMasked = true
+                end
+            end
+        end
+    end
+end)
 
 keyTab:CreateButton({
     Name = "Validate Key",
