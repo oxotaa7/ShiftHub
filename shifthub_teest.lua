@@ -1,13 +1,185 @@
-local v0=17687505296 -(261 + 624) ;if (game.PlaceId~=v0) then local v33=0 -0 ;while true do if (v33==0) then warn("Script only works in All Star Tower Defense.");return;end end end local v1=game:GetService("HttpService");local v2=game:GetService("UserInputService");local v3=game:GetService("ReplicatedStorage");local v4="rbxassetid://84041558102940";local v5="rbxassetid://78706875936198";local function v6(v11) local v12=0 -0 ;local v13;while true do if (v12==(6 -4)) then v13:Play();v13.Ended:Connect(function() v13:Destroy();end);break;end if (v12==(1080 -(1020 + 60))) then local v34=1423 -(630 + 793) ;while true do if ((0 -0)==v34) then v13=Instance.new("Sound");v13.SoundId=v11;v34=4 -3 ;end if ((1 + 0)==v34) then v12=1 + 0 ;break;end end end if (v12==(3 -2)) then v13.Volume=1748 -(760 + 987) ;v13.Parent=game:GetService("SoundService");v12=1915 -(1789 + 124) ;end end end local v7=loadstring(game:HttpGet("https://raw.githubusercontent.com/oxotaa7/ShiftHub/refs/heads/main/shifthub_teest.lua"))();local v8=v7:CreateWindow({Name="Shift Hub - Key",LoadingTitle="Loading Shift Hub...",LoadingSubtitle="Checking Key...",ConfigurationSaving={Enabled=false},KeySystem=false});local v9=v8:CreateTab("🔑 Key");local v10="";v9:CreateInput({Name="Your Key",PlaceholderText="Enter your key here",RemoveTextAfterFocusLost=false,Callback=function(v14) v10=v14;end});task.spawn(function() local v15=766 -(745 + 21) ;local v16;while true do if ((1 + 0)==v15) then for v38,v39 in ipairs(v16:GetChildren()) do if (v39:IsA("ScreenGui") and v39.Name:find("Shift Hub")) then for v54,v55 in ipairs(v39:GetDescendants()) do if (v55:IsA("TextBox") and (v55.PlaceholderText=="Enter your key here")) then v55.TextMasked=true;end end end end break;end if (v15==(0 -0)) then task.wait(3.5 -2 );v16=game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui");v15=1 + 0 ;end end end);v9:CreateButton({Name="Validate Key",Callback=function() local v17=0 + 0 ;local v18;local v19;local v20;while true do if (v17==(1056 -(87 + 968))) then if v19 then local v49=0;local v50;while true do if (v49==(0 -0)) then v50=v1:JSONDecode(v20);if v50.valid then local v63=0;local v64;while true do if ((8 -6)==v63) then openMainWindow(v64);break;end if (v63==(0 + 0)) then v7:Notify({Title="Success",Content="Valid key! Welcome to Shift Hub.",Duration=8 -5 });v7:Destroy();v63=2 -1 ;end if (v63==(1414 -(447 + 966))) then wait(0.2 + 0 );v64=loadstring(game:HttpGet("https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua"))();v63=2 + 0 ;end end else v7:Notify({Title="Error",Content="Invalid key! Try again.",Duration=13 -8 });end break;end end else v7:Notify({Title="Error",Content="Could not connect to server.",Duration=401 -(115 + 281) });end break;end if (v17==(0 -0)) then v18="http://localhost:3000/validate/"   .. v1:UrlEncode(v10) ;v19,v20=pcall(function() return game:HttpGet(v18);end);v17=1818 -(1703 + 114) ;end end end});v9:CreateButton({Name="Open Discord",Callback=function() local v21=701 -(376 + 325) ;local v22;while true do if (v21==(0 -0)) then v22=0;while true do if (v22==(0 -0)) then setclipboard("https://discord.gg/mAn7k89V");v7:Notify({Title="Link copied!",Content="Discord link copied to clipboard. Paste in browser to join.",Duration=5});break;end end break;end end end});function openMainWindow(v23) local v24=0 + 0 ;local v25;local v26;local v27;local v28;local v29;local v30;local v31;local v32;while true do if (v24==(2 -1)) then v26:CreateToggle({Name="Rollback Trait",CurrentValue=false,Callback=function(v40) local v41=867 -(550 + 317) ;while true do if (v41==0) then v27=v40;print("Rollback Ativado.",v40);break;end end end});v26:CreateButton({Name="Confirm Rollback",Callback=function() if v27 then local v52=14 -(9 + 5) ;while true do if (v52==(377 -(85 + 291))) then v7:Notify({Title="Rollback",Content="Rollback feito com sucesso.",Duration=1268 -(243 + 1022) });wait(11 -8 );v52=2;end if (v52==(2 + 0)) then v7:Notify({Title="Rollback",Content="Relogando...",Duration=1183 -(1123 + 57) });game:GetService("TeleportService"):Teleport(game.PlaceId,game.Players.LocalPlayer);break;end if (v52==0) then v7:Notify({Title="Rollback",Content="Rollback carregando...",Duration=3 + 0 });wait(264 -(163 + 91) );v52=1931 -(1869 + 61) ;end end else v7:Notify({Title="Error",Content="Rollback Trait não está ativado.",Duration=3});end end});v28=0 + 0 ;v26:CreateInput({Name="Amount of Gems",PlaceholderText="Enter gems amount",RemoveTextAfterFocusLost=false,Callback=function(v42) local v43=0 -0 ;local v44;while true do if (v43==(0 -0)) then v44=tonumber(v42);if v44 then local v58=0 + 0 ;local v59;while true do if ((0 -0)==v58) then v59=0;while true do if (v59==0) then v28=v44;print("Amount of Gems set to:",v28);break;end end break;end end else print("Please enter a valid number");end break;end end end});v24=2 -0 ;end if ((0 + 0)==v24) then v25=v23:CreateWindow({Name="Shift Hub",LoadingTitle="Shift Hub",LoadingSubtitle="",ConfigurationSaving={Enabled=false},KeySystem=false});v26=v25:CreateTab("🏠 Main");v26:CreateSection("Welcome to Shift Hub!");v27=false;v24=1;end if (v24==(1476 -(1329 + 145))) then v26:CreateToggle({Name="Give Gems",CurrentValue=false,Callback=function(v45) local v46=1824 -(1195 + 629) ;while true do if (v46==(971 -(140 + 831))) then print("Give Gems toggled:",v45,"Amount:",v28);if (v45 and (v28>(241 -(187 + 54)))) then local v60=1850 -(1409 + 441) ;local v61;while true do if (v60==(718 -(15 + 703))) then v61={Premium=v28,Type="Cash",Cash=211 + 89 };if (v3:FindFirstChild("Binds") and v3.Binds:FindFirstChild("CashBind")) then local v66=0;local v67;while true do if (v66==(0 + 0)) then v67=0 + 0 ;while true do if (v67==0) then v3.Binds.CashBind:Fire(v61);print("Fired remote for",v28,"gems! Table sent:",v61);break;end end break;end end else print("ERROR: Remote not found! ReplicatedStorage.Binds.CashBind does not exist.");end break;end end end break;end end end});v29=v25:CreateTab("⚙️ Config");v29:CreateSection("Settings");v29:CreateButton({Name="Rejoin",Callback=function() game:GetService("TeleportService"):Teleport(game.PlaceId,game.Players.LocalPlayer);end});v24=4 -1 ;end if (v24==(442 -(262 + 176))) then v2.InputBegan:Connect(function(v47,v48) if (v31 and (v47.UserInputType==Enum.UserInputType.Keyboard)) then local v53=0;while true do if (v53==(1722 -(345 + 1376))) then v32:SetText("Current Bind: "   .. tostring(v30.Name) );break;end if (v53==(688 -(198 + 490))) then v30=v47.KeyCode;v31=false;v53=1;end end elseif (v30 and (v47.UserInputType==Enum.UserInputType.Keyboard) and (v47.KeyCode==v30)) then local v56=0 -0 ;while true do if (v56==(0 -0)) then v25.Visible= not v25.Visible;if v25.Visible then v6(v4);else v6(v5);end break;end end end end);v25.Visible=true;v6(v4);break;end if (v24==(1209 -(696 + 510))) then v30=nil;v31=false;v32=v29:CreateLabel({Name="Current Bind: None"});v29:CreateButton({Name="Choose bind to show/hide interface",Callback=function() v31=true;v32:SetText("Press any key...");end});v24=7 -3 ;end end end
--- ⚠️ WARNING: integrity protected!
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+local v0 = 17687505296 -(261 + 624)
+if game.PlaceId ~= v0 then
+    warn("Script only works in All Star Tower Defense.")
+    return
+end
 
-]]--
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+-- Carrega o script principal
+local v7 = loadstring(game:HttpGet("https://raw.githubusercontent.com/oxotaa7/ShiftHub/refs/heads/main/shifthub_teest.lua", true))()
+
+local keyWindow = v7:CreateWindow({
+    Name = "Shift Hub - Key",
+    LoadingTitle = "Loading Shift Hub...",
+    LoadingSubtitle = "Checking Key...",
+    ConfigurationSaving = {Enabled = false},
+    KeySystem = false
+})
+
+local keyTab = keyWindow:CreateTab("🔑 Key")
+local userKey = ""
+
+keyTab:CreateInput({
+    Name = "Your Key",
+    PlaceholderText = "Enter your key here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(value)
+        userKey = value
+    end
+})
+
+-- Mascara do campo da key
+task.spawn(function()
+    task.wait(1.5)
+    local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    for _, gui in ipairs(PlayerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui.Name:find("Shift Hub") then
+            for _, v in ipairs(gui:GetDescendants()) do
+                if v:IsA("TextBox") and v.PlaceholderText == "Enter your key here" then
+                    v.TextMasked = true
+                end
+            end
+        end
+    end
+end)
+
+-- Botão de validar a key
+keyTab:CreateButton({
+    Name = "Validate Key",
+    Callback = function()
+        local url = "http://localhost:3000/validate/" .. HttpService:UrlEncode(userKey)
+        local success, response = pcall(function()
+            return game:HttpGet(url)
+        end)
+        if success then
+            local data = HttpService:JSONDecode(response)
+            if data.valid then
+                v7:Notify({Title = "Success", Content = "Valid key! Welcome to Shift Hub.", Duration = 3})
+                v7:Destroy()
+                wait(0.2)
+                local v64 = loadstring(game:HttpGet("https://raw.githubusercontent.com/oxotaa7/ShiftHub/refs/heads/main/shifthub_teest.lua", true))()
+                openMainWindow(v64)
+            else
+                v7:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
+            end
+        else
+            v7:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
+        end
+    end
+})
+
+-- Botão para abrir Discord
+keyTab:CreateButton({
+    Name = "Open Discord",
+    Callback = function()
+        setclipboard("https://discord.gg/mAn7k89V")
+        v7:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
+    end
+})
+
+-- Função da GUI principal
+function openMainWindow(Rayfield2)
+    local mainWindow = Rayfield2:CreateWindow({
+        Name = "Shift Hub",
+        LoadingTitle = "Shift Hub",
+        LoadingSubtitle = "",
+        ConfigurationSaving = {Enabled = false},
+        KeySystem = false
+    })
+
+    local mainTab = mainWindow:CreateTab("🏠 Main")
+    mainTab:CreateSection("Welcome to Shift Hub!")
+
+    local rollbackEnabled = false
+    mainTab:CreateToggle({
+        Name = "Rollback Trait",
+        CurrentValue = false,
+        Callback = function(value)
+            rollbackEnabled = value
+            print("Rollback Ativado.", value)
+        end
+    })
+
+    mainTab:CreateButton({
+        Name = "Confirm Rollback",
+        Callback = function()
+            if rollbackEnabled then
+                v7:Notify({Title = "Rollback", Content = "Rollback feito com sucesso.", Duration = 3})
+                wait(3)
+                v7:Notify({Title = "Rollback", Content = "Relogando...", Duration = 3})
+                game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+            else
+                v7:Notify({Title = "Error", Content = "Rollback Trait não está ativado.", Duration = 3})
+            end
+        end
+    })
+
+    local gemValue = 0
+    mainTab:CreateInput({
+        Name = "Amount of Gems",
+        PlaceholderText = "Enter gems amount",
+        RemoveTextAfterFocusLost = false,
+        Callback = function(value)
+            local num = tonumber(value)
+            if num then
+                gemValue = num
+                print("Amount of Gems set to:", gemValue)
+            else
+                print("Please enter a valid number")
+            end
+        end
+    })
+
+    mainTab:CreateToggle({
+        Name = "Give Gems",
+        CurrentValue = false,
+        Callback = function(enabled)
+            print("Give Gems toggled:", enabled, "Amount:", gemValue)
+            if enabled and gemValue > 0 then
+                local ohTable1 = {Premium = gemValue, Type = "Cash", Cash = 300}
+                if ReplicatedStorage:FindFirstChild("Binds") and ReplicatedStorage.Binds:FindFirstChild("CashBind") then
+                    ReplicatedStorage.Binds.CashBind:Fire(ohTable1)
+                    print("Fired remote for", gemValue, "gems! Table sent:", ohTable1)
+                else
+                    print("ERROR: Remote not found! ReplicatedStorage.Binds.CashBind does not exist.")
+                end
+            end
+        end
+    })
+
+    local configsTab = mainWindow:CreateTab("⚙️ Config")
+    configsTab:CreateSection("Settings")
+    configsTab:CreateButton({
+        Name = "Rejoin",
+        Callback = function()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+        end
+    })
+
+    local bindKey = nil
+    local listeningForBind = false
+    local bindLabel = configsTab:CreateLabel({Name = "Current Bind: None"})
+
+    configsTab:CreateButton({
+        Name = "Choose bind to show/hide interface",
+        Callback = function()
+            listeningForBind = true
+            bindLabel:SetText("Press any key...")
+        end
+    })
+
+    UserInputService.InputBegan:Connect(function(input, processed)
+        if listeningForBind and input.UserInputType == Enum.UserInputType.Keyboard then
+            bindKey = input.KeyCode
+            listeningForBind = false
+            bindLabel:SetText("Current Bind: " .. tostring(bindKey.Name))
+        elseif bindKey and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == bindKey then
+            mainWindow.Visible = not mainWindow.Visible
+        end
+    end)
+
+    mainWindow.Visible = true
+end
