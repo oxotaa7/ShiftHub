@@ -1,3 +1,7 @@
+-- Roblox LUA Script
+-- Este script foi adaptado para se conectar ao seu servidor
+-- usando a URL do ngrok.
+
 local allowedPlaceId = 17687504411
 if game.PlaceId ~= allowedPlaceId then
     warn("Script only works in All Star Tower Defense.")
@@ -45,13 +49,18 @@ keyTab:CreateInput({
     end
 })
 
+-- AQUI ESTÁ A MUDANÇA
 keyTab:CreateButton({
     Name = "Validate Key",
     Callback = function()
-        local url = "https://bot-shift-discord-hub.vercel.app/validate/" .. HttpService:UrlEncode(userKey)
+        -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
+        local ngrokUrl = "https://9b457e7a6e84.ngrok-free.app"
+        local url = ngrokUrl .. "/validate/" .. HttpService:UrlEncode(userKey)
+
         local success, response = pcall(function()
             return game:HttpGet(url)
         end)
+
         if success then
             local data = HttpService:JSONDecode(response)
             if data.valid then
@@ -63,6 +72,7 @@ keyTab:CreateButton({
                 Rayfield:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
             end
         else
+            -- A requisição falhou. Pode ser erro de conexão.
             Rayfield:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
         end
     end
@@ -79,7 +89,7 @@ keyTab:CreateButton({
 -- FUNÇÃO PRINCIPAL DA GUI
 function openMainWindow()
     local Rayfield2 = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
-    
+
     local mainWindow = Rayfield2:CreateWindow({
         Name = "Shift Hub",
         LoadingTitle = "Shift Hub",
@@ -113,13 +123,13 @@ function openMainWindow()
                         -- Intercepta Fire e Invoke para impedir execução
                         if obj:IsA("RemoteEvent") then
                             local originalFire = obj.FireServer
-                            obj.FireServer = function() 
+                            obj.FireServer = function()
                                 print("[Rollback] RemoteEvent "..obj.Name.." bloqueado temporariamente")
                             end
                             blockedRemotes[obj] = {original = originalFire}
                         elseif obj:IsA("RemoteFunction") then
                             local originalInvoke = obj.InvokeServer
-                            obj.InvokeServer = function() 
+                            obj.InvokeServer = function()
                                 print("[Rollback] RemoteFunction "..obj.Name.." bloqueado temporariamente")
                                 return nil
                             end
@@ -220,4 +230,3 @@ function openMainWindow()
     mainWindow.Visible = true
     playSound(openSoundId)
 end
-
