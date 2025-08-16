@@ -1,6 +1,4 @@
 -- Roblox LUA Script
--- Este script foi adaptado para se conectar ao seu servidor
--- usando a URL do ngrok.
 
 local allowedPlaceId = 17687504411
 if game.PlaceId ~= allowedPlaceId then
