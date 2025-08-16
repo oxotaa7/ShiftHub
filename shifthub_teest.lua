@@ -1,4 +1,10 @@
 -- Roblox LUA Script
+-- Versão para debug e tratamento de erros de carregamento.
+-- Use esta versão se o script não estiver executando.
+
+-- Confirma se o script começou a rodar.
+print("Script started...")
+
 local allowedPlaceId = 17687504411
 if game.PlaceId ~= allowedPlaceId then
     warn("Script only works in All Star Tower Defense.")
@@ -25,8 +31,17 @@ local function playSound(assetId)
     end)
 end
 
+-- Tenta carregar a biblioteca Rayfield de forma segura
+local success, Rayfield = pcall(function()
+    return loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
+end)
+
+if not success then
+    warn("Failed to load Rayfield GUI library. Please check the URL or try again later.")
+    return
+end
+
 -- KEY GUI
-local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
 local keyWindow = Rayfield:CreateWindow({
     Name = "Shift Hub - Key",
     LoadingTitle = "Loading Shift Hub...",
@@ -56,7 +71,7 @@ keyTab:CreateButton({
         local data = HttpService:JSONEncode({ key = userKey })
 
         local success, response = pcall(function()
-            -- Agora usando PostAsync, que é mais robusto em mobile
+            -- Usando PostAsync, que é mais robusto em mobile
             return HttpService:PostAsync(url, data, Enum.HttpContentType.ApplicationJson)
         end)
 
@@ -80,7 +95,6 @@ keyTab:CreateButton({
 keyTab:CreateButton({
     Name = "Open Discord",
     Callback = function()
-        -- Corrigido para evitar erros em executors de celular que não suportam setclipboard
         local success, err = pcall(function()
             setclipboard("https://discord.gg/mAn7k89V")
         end)
@@ -88,7 +102,6 @@ keyTab:CreateButton({
         if success then
             Rayfield:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
         else
-            -- Mostra uma notificação alternativa se a cópia falhar
             Rayfield:Notify({Title = "Link de Convite", Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.", Duration = 7})
         end
     end
@@ -123,12 +136,10 @@ function openMainWindow()
             print("Rollback Ativado.", value)
 
             if rollbackEnabled then
-                -- Bloquear RemoteEvents e RemoteFunctions
                 blockedRemotes = {}
                 for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
                     if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
                         blockedRemotes[obj] = true
-                        -- Intercepta Fire e Invoke para impedir execução
                         if obj:IsA("RemoteEvent") then
                             local originalFire = obj.FireServer
                             obj.FireServer = function()
@@ -139,13 +150,13 @@ function openMainWindow()
                             local originalInvoke = obj.InvokeServer
                             obj.InvokeServer = function()
                                 print("[Rollback] RemoteFunction "..obj.Name.." bloqueado temporariamente")
+                                return nil
                             end
                             blockedRemotes[obj] = {original = originalInvoke}
                         end
                     end
                 end
 
-                -- Adicionar atraso nos inputs
                 inputConnections.input = UserInputService.InputBegan:Connect(function(input, processed)
                     if rollbackEnabled then
                         wait(0.2) -- atraso artificial
@@ -153,7 +164,6 @@ function openMainWindow()
                 end)
 
             else
-                -- Restaurar remotes
                 for obj, data in pairs(blockedRemotes) do
                     if obj and obj.Parent then
                         if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
@@ -169,7 +179,6 @@ function openMainWindow()
                 end
                 blockedRemotes = {}
 
-                -- Desconectar input lag
                 if inputConnections.input then
                     inputConnections.input:Disconnect()
                     inputConnections.input = nil
