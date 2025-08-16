@@ -48,7 +48,7 @@ keyTab:CreateInput({
 keyTab:CreateButton({
     Name = "Validate Key",
     Callback = function()
-        local url = "http://localhost:3000/validate/" .. HttpService:UrlEncode(userKey)
+        local url = "https://bot-shift-discord-hub.vercel.app/validate/" .. HttpService:UrlEncode(userKey)
         local success, response = pcall(function()
             return game:HttpGet(url)
         end)
@@ -220,3 +220,4 @@ function openMainWindow()
     mainWindow.Visible = true
     playSound(openSoundId)
 end
+
