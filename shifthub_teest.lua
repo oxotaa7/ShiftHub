@@ -25,6 +25,12 @@ local function playSound(assetId)
     end)
 end
 
+-- Detecta função de request do executor
+local request = (http_request or request or (syn and syn.request) or (fluxus and fluxus.request))
+if not request then
+    warn("Seu executor não suporta requests HTTP.")
+end
+
 -- KEY GUI
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
 local keyWindow = Rayfield:CreateWindow({
@@ -50,28 +56,36 @@ keyTab:CreateInput({
 keyTab:CreateButton({
     Name = "Validate Key",
     Callback = function()
+        if not request then
+            Rayfield:Notify({Title = "Error", Content = "Seu executor não suporta requisições HTTP.", Duration = 5})
+            return
+        end
+
         -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
         local ngrokUrl = "https://c6cb00cb1a8a.ngrok-free.app"
         local url = ngrokUrl .. "/validate"
-        local data = HttpService:JSONEncode({ key = userKey })
 
-        local success, response = pcall(function()
-            -- Agora usando PostAsync, que é mais robusto em mobile
-            return HttpService:PostAsync(url, data, Enum.HttpContentType.ApplicationJson)
-        end)
+        local response = request({
+            Url = url,
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode({ key = userKey })
+        })
 
-        if success then
-            local data = HttpService:JSONDecode(response)
-            if data.valid then
+        if response and response.Body then
+            local success, data = pcall(function()
+                return HttpService:JSONDecode(response.Body)
+            end)
+
+            if success and data and data.valid then
                 Rayfield:Notify({Title = "Success", Content = "Valid key! Welcome to Shift Hub.", Duration = 3})
-                Rayfield:Destroy() -- Destrói GUI da Key
+                Rayfield:Destroy()
                 wait(0.2)
-                openMainWindow() -- Abre GUI principal limpa
+                openMainWindow()
             else
                 Rayfield:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
             end
         else
-            -- A requisição falhou. Pode ser erro de conexão.
             Rayfield:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
         end
     end
@@ -80,7 +94,6 @@ keyTab:CreateButton({
 keyTab:CreateButton({
     Name = "Open Discord",
     Callback = function()
-        -- Corrigido para evitar erros em executors de celular que não suportam setclipboard
         local success, err = pcall(function()
             setclipboard("https://discord.gg/mAn7k89V")
         end)
@@ -88,7 +101,6 @@ keyTab:CreateButton({
         if success then
             Rayfield:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
         else
-            -- Mostra uma notificação alternativa se a cópia falhar
             Rayfield:Notify({Title = "Link de Convite", Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.", Duration = 7})
         end
     end
@@ -123,12 +135,10 @@ function openMainWindow()
             print("Rollback Ativado.", value)
 
             if rollbackEnabled then
-                -- Bloquear RemoteEvents e RemoteFunctions
                 blockedRemotes = {}
                 for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
                     if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
                         blockedRemotes[obj] = true
-                        -- Intercepta Fire e Invoke para impedir execução
                         if obj:IsA("RemoteEvent") then
                             local originalFire = obj.FireServer
                             obj.FireServer = function()
@@ -145,15 +155,13 @@ function openMainWindow()
                     end
                 end
 
-                -- Adicionar atraso nos inputs
                 inputConnections.input = UserInputService.InputBegan:Connect(function(input, processed)
                     if rollbackEnabled then
-                        wait(0.2) -- atraso artificial
+                        wait(0.2)
                     end
                 end)
 
             else
-                -- Restaurar remotes
                 for obj, data in pairs(blockedRemotes) do
                     if obj and obj.Parent then
                         if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
@@ -169,7 +177,6 @@ function openMainWindow()
                 end
                 blockedRemotes = {}
 
-                -- Desconectar input lag
                 if inputConnections.input then
                     inputConnections.input:Disconnect()
                     inputConnections.input = nil
@@ -178,7 +185,6 @@ function openMainWindow()
         end
     })
 
-    -- Confirm Rollback
     mainTab:CreateButton({
         Name = "Confirm Rollback",
         Callback = function()
@@ -205,7 +211,6 @@ function openMainWindow()
         end
     })
 
-    -- Bind + Sound
     local bindKey = nil
     local listeningForBind = false
     local bindLabel = configsTab:CreateLabel({ Name = "Current Bind: None" })
