@@ -1,14 +1,8 @@
 -- Roblox LUA Script
--- Versão para debug e tratamento de erros de carregamento.
--- Use esta versão se o script não estiver executando.
-
--- Confirma se o script começou a rodar.
-print("Script started...")
-
 local allowedPlaceId = 17687504411
 if game.PlaceId ~= allowedPlaceId then
-    warn("Script only works in All Star Tower Defense.")
-    return
+    warn("Script only works in All Star Tower Defense.")
+    return
 end
 
 local HttpService = game:GetService("HttpService")
@@ -21,227 +15,224 @@ local closeSoundId = "rbxassetid://78706875936198"
 
 -- Funções Auxiliares
 local function playSound(assetId)
-    local sound = Instance.new("Sound")
-    sound.SoundId = assetId
-    sound.Volume = 1
-    sound.Parent = game:GetService("SoundService")
-    sound:Play()
-    sound.Ended:Connect(function()
-        sound:Destroy()
-    end)
-end
-
--- Tenta carregar a biblioteca Rayfield de forma segura
-local success, Rayfield = pcall(function()
-    return loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
-end)
-
-if not success then
-    warn("Failed to load Rayfield GUI library. Please check the URL or try again later.")
-    return
+    local sound = Instance.new("Sound")
+    sound.SoundId = assetId
+    sound.Volume = 1
+    sound.Parent = game:GetService("SoundService")
+    sound:Play()
+    sound.Ended:Connect(function()
+        sound:Destroy()
+    end)
 end
 
 -- KEY GUI
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
 local keyWindow = Rayfield:CreateWindow({
-    Name = "Shift Hub - Key",
-    LoadingTitle = "Loading Shift Hub...",
-    LoadingSubtitle = "Checking Key...",
-    ConfigurationSaving = { Enabled = false },
-    KeySystem = false
+    Name = "Shift Hub - Key",
+    LoadingTitle = "Loading Shift Hub...",
+    LoadingSubtitle = "Checking Key...",
+    ConfigurationSaving = { Enabled = false },
+    KeySystem = false
 })
 
 local keyTab = keyWindow:CreateTab("🔑 Key")
 local userKey = ""
 
 keyTab:CreateInput({
-    Name = "Your Key",
-    PlaceholderText = "Enter your key here",
-    RemoveTextAfterFocusLost = false,
-    Callback = function(value)
-        userKey = value
-    end
+    Name = "Your Key",
+    PlaceholderText = "Enter your key here",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(value)
+        userKey = value
+    end
 })
 
 keyTab:CreateButton({
-    Name = "Validate Key",
-    Callback = function()
-        -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
-        local ngrokUrl = "https://9b457e7a6e84.ngrok-free.app"
-        local url = ngrokUrl .. "/validate"
-        local data = HttpService:JSONEncode({ key = userKey })
+    Name = "Validate Key",
+    Callback = function()
+        -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
+        local ngrokUrl = "https://c6cb00cb1a8a.ngrok-free.app"
+        local url = ngrokUrl .. "/validate"
+        local data = HttpService:JSONEncode({ key = userKey })
 
-        local success, response = pcall(function()
-            -- Usando PostAsync, que é mais robusto em mobile
-            return HttpService:PostAsync(url, data, Enum.HttpContentType.ApplicationJson)
-        end)
+        local success, response = pcall(function()
+            -- Agora usando PostAsync, que é mais robusto em mobile
+            return HttpService:PostAsync(url, data, Enum.HttpContentType.ApplicationJson)
+        end)
 
-        if success then
-            local data = HttpService:JSONDecode(response)
-            if data.valid then
-                Rayfield:Notify({Title = "Success", Content = "Valid key! Welcome to Shift Hub.", Duration = 3})
-                Rayfield:Destroy() -- Destrói GUI da Key
-                wait(0.2)
-                openMainWindow() -- Abre GUI principal limpa
-            else
-                Rayfield:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
-            end
-        else
-            -- A requisição falhou. Pode ser erro de conexão.
-            Rayfield:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
-        end
-    end
+        if success then
+            local data = HttpService:JSONDecode(response)
+            if data.valid then
+                Rayfield:Notify({Title = "Success", Content = "Valid key! Welcome to Shift Hub.", Duration = 3})
+                Rayfield:Destroy() -- Destrói GUI da Key
+                wait(0.2)
+                openMainWindow() -- Abre GUI principal limpa
+            else
+                Rayfield:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
+            end
+        else
+            -- A requisição falhou. Pode ser erro de conexão.
+            Rayfield:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
+        end
+    end
 })
 
 keyTab:CreateButton({
-    Name = "Open Discord",
-    Callback = function()
-        local success, err = pcall(function()
-            setclipboard("https://discord.gg/mAn7k89V")
-        end)
+    Name = "Open Discord",
+    Callback = function()
+        -- Corrigido para evitar erros em executors de celular que não suportam setclipboard
+        local success, err = pcall(function()
+            setclipboard("https://discord.gg/mAn7k89V")
+        end)
 
-        if success then
-            Rayfield:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
-        else
-            Rayfield:Notify({Title = "Link de Convite", Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.", Duration = 7})
-        end
-    end
+        if success then
+            Rayfield:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
+        else
+            -- Mostra uma notificação alternativa se a cópia falhar
+            Rayfield:Notify({Title = "Link de Convite", Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.", Duration = 7})
+        end
+    end
 })
 
 -- FUNÇÃO PRINCIPAL DA GUI
 function openMainWindow()
-    local Rayfield2 = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
+    local Rayfield2 = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
 
-    local mainWindow = Rayfield2:CreateWindow({
-        Name = "Shift Hub",
-        LoadingTitle = "Shift Hub",
-        LoadingSubtitle = "",
-        ConfigurationSaving = { Enabled = false },
-        KeySystem = false
-    })
+    local mainWindow = Rayfield2:CreateWindow({
+        Name = "Shift Hub",
+        LoadingTitle = "Shift Hub",
+        LoadingSubtitle = "",
+        ConfigurationSaving = { Enabled = false },
+        KeySystem = false
+    })
 
-    -- Main Tab
-    local mainTab = mainWindow:CreateTab("🏠 Main")
-    mainTab:CreateSection("Welcome to Shift Hub!")
+    -- Main Tab
+    local mainTab = mainWindow:CreateTab("🏠 Main")
+    mainTab:CreateSection("Welcome to Shift Hub!")
 
-    -- Rollback Trait
-    local rollbackEnabled = false
-    local blockedRemotes = {}
-    local inputConnections = {}
+    -- Rollback Trait
+    local rollbackEnabled = false
+    local blockedRemotes = {}
+    local inputConnections = {}
 
-    mainTab:CreateToggle({
-        Name = "Rollback Trait",
-        CurrentValue = false,
-        Callback = function(value)
-            rollbackEnabled = value
-            print("Rollback Ativado.", value)
+    mainTab:CreateToggle({
+        Name = "Rollback Trait",
+        CurrentValue = false,
+        Callback = function(value)
+            rollbackEnabled = value
+            print("Rollback Ativado.", value)
 
-            if rollbackEnabled then
-                blockedRemotes = {}
-                for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
-                    if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-                        blockedRemotes[obj] = true
-                        if obj:IsA("RemoteEvent") then
-                            local originalFire = obj.FireServer
-                            obj.FireServer = function()
-                                print("[Rollback] RemoteEvent "..obj.Name.." bloqueado temporariamente")
-                            end
-                            blockedRemotes[obj] = {original = originalFire}
-                        elseif obj:IsA("RemoteFunction") then
-                            local originalInvoke = obj.InvokeServer
-                            obj.InvokeServer = function()
-                                print("[Rollback] RemoteFunction "..obj.Name.." bloqueado temporariamente")
-                                return nil
-                            end
-                            blockedRemotes[obj] = {original = originalInvoke}
-                        end
-                    end
-                end
+            if rollbackEnabled then
+                -- Bloquear RemoteEvents e RemoteFunctions
+                blockedRemotes = {}
+                for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
+                    if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+                        blockedRemotes[obj] = true
+                        -- Intercepta Fire e Invoke para impedir execução
+                        if obj:IsA("RemoteEvent") then
+                            local originalFire = obj.FireServer
+                            obj.FireServer = function()
+                                print("[Rollback] RemoteEvent "..obj.Name.." bloqueado temporariamente")
+                            end
+                            blockedRemotes[obj] = {original = originalFire}
+                        elseif obj:IsA("RemoteFunction") then
+                            local originalInvoke = obj.InvokeServer
+                            obj.InvokeServer = function()
+                                print("[Rollback] RemoteFunction "..obj.Name.." bloqueado temporariamente")
+                            end
+                            blockedRemotes[obj] = {original = originalInvoke}
+                        end
+                    end
+                end
 
-                inputConnections.input = UserInputService.InputBegan:Connect(function(input, processed)
-                    if rollbackEnabled then
-                        wait(0.2) -- atraso artificial
-                    end
-                end)
+                -- Adicionar atraso nos inputs
+                inputConnections.input = UserInputService.InputBegan:Connect(function(input, processed)
+                    if rollbackEnabled then
+                        wait(0.2) -- atraso artificial
+                    end
+                end)
 
-            else
-                for obj, data in pairs(blockedRemotes) do
-                    if obj and obj.Parent then
-                        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-                            if data.original then
-                                if obj:IsA("RemoteEvent") then
-                                    obj.FireServer = data.original
-                                elseif obj:IsA("RemoteFunction") then
-                                    obj.InvokeServer = data.original
-                                end
-                            end
-                        end
-                    end
-                end
-                blockedRemotes = {}
+            else
+                -- Restaurar remotes
+                for obj, data in pairs(blockedRemotes) do
+                    if obj and obj.Parent then
+                        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+                            if data.original then
+                                if obj:IsA("RemoteEvent") then
+                                    obj.FireServer = data.original
+                                elseif obj:IsA("RemoteFunction") then
+                                    obj.InvokeServer = data.original
+                                end
+                            end
+                        end
+                    end
+                end
+                blockedRemotes = {}
 
-                if inputConnections.input then
-                    inputConnections.input:Disconnect()
-                    inputConnections.input = nil
-                end
-            end
-        end
-    })
+                -- Desconectar input lag
+                if inputConnections.input then
+                    inputConnections.input:Disconnect()
+                    inputConnections.input = nil
+                end
+            end
+        end
+    })
 
-    -- Confirm Rollback
-    mainTab:CreateButton({
-        Name = "Confirm Rollback",
-        Callback = function()
-            if rollbackEnabled then
-                Rayfield2:Notify({Title = "Rollback", Content = "Rollback carregando...", Duration = 3})
-                wait(6)
-                Rayfield2:Notify({Title = "Rollback", Content = "Rollback feito com sucesso.", Duration = 3})
-                wait(3)
-                game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-            else
-                Rayfield2:Notify({Title = "Error", Content = "Rollback Trait não está ativado.", Duration = 3})
-            end
-        end
-    })
+    -- Confirm Rollback
+    mainTab:CreateButton({
+        Name = "Confirm Rollback",
+        Callback = function()
+            if rollbackEnabled then
+                Rayfield2:Notify({Title = "Rollback", Content = "Rollback carregando...", Duration = 3})
+                wait(6)
+                Rayfield2:Notify({Title = "Rollback", Content = "Rollback feito com sucesso.", Duration = 3})
+                wait(3)
+                game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+            else
+                Rayfield2:Notify({Title = "Error", Content = "Rollback Trait não está ativado.", Duration = 3})
+            end
+        end
+    })
 
-    -- Config Tab
-    local configsTab = mainWindow:CreateTab("⚙️ Config")
-    configsTab:CreateSection("Settings")
+    -- Config Tab
+    local configsTab = mainWindow:CreateTab("⚙️ Config")
+    configsTab:CreateSection("Settings")
 
-    configsTab:CreateButton({
-        Name = "Rejoin",
-        Callback = function()
-            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-        end
-    })
+    configsTab:CreateButton({
+        Name = "Rejoin",
+        Callback = function()
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+        end
+    })
 
-    -- Bind + Sound
-    local bindKey = nil
-    local listeningForBind = false
-    local bindLabel = configsTab:CreateLabel({ Name = "Current Bind: None" })
+    -- Bind + Sound
+    local bindKey = nil
+    local listeningForBind = false
+    local bindLabel = configsTab:CreateLabel({ Name = "Current Bind: None" })
 
-    configsTab:CreateButton({
-        Name = "Choose bind to show/hide interface",
-        Callback = function()
-            listeningForBind = true
-            bindLabel:SetText("Press any key...")
-        end
-    })
+    configsTab:CreateButton({
+        Name = "Choose bind to show/hide interface",
+        Callback = function()
+            listeningForBind = true
+            bindLabel:SetText("Press any key...")
+        end
+    })
 
-    UserInputService.InputBegan:Connect(function(input, processed)
-        if listeningForBind and input.UserInputType == Enum.UserInputType.Keyboard then
-            bindKey = input.KeyCode
-            listeningForBind = false
-            bindLabel:SetText("Current Bind: " .. tostring(bindKey.Name))
-        elseif bindKey and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == bindKey then
-            mainWindow.Visible = not mainWindow.Visible
-            if mainWindow.Visible then
-                playSound(openSoundId)
-            else
-                playSound(closeSoundId)
-            end
-        end
-    end)
+    UserInputService.InputBegan:Connect(function(input, processed)
+        if listeningForBind and input.UserInputType == Enum.UserInputType.Keyboard then
+            bindKey = input.KeyCode
+            listeningForBind = false
+            bindLabel:SetText("Current Bind: " .. tostring(bindKey.Name))
+        elseif bindKey and input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == bindKey then
+            mainWindow.Visible = not mainWindow.Visible
+            if mainWindow.Visible then
+                playSound(openSoundId)
+            else
+                playSound(closeSoundId)
+            end
+        end
+    end)
 
-    mainWindow.Visible = true
-    playSound(openSoundId)
+    mainWindow.Visible = true
+    playSound(openSoundId)
 end
