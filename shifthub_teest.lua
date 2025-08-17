@@ -62,7 +62,7 @@ keyTab:CreateButton({
         end
 
         -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
-        local ngrokUrl = "https://5752298027ba.ngrok-free.app"
+        local ngrokUrl = "https://b46a5ef2d50d.ngrok-free.app"
         local url = ngrokUrl .. "/validate"
 
         local response = request({
@@ -241,5 +241,6 @@ function openMainWindow()
     mainWindow.Visible = true
     playSound(openSoundId)
 end
+
 
 
