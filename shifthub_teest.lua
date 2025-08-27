@@ -25,12 +25,6 @@ local function playSound(assetId)
     end)
 end
 
--- Detecta função de request do executor
-local request = (http_request or request or (syn and syn.request) or (fluxus and fluxus.request))
-if not request then
-    warn("Seu executor não suporta requests HTTP.")
-end
-
 -- KEY GUI
 local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/oxotaa/teste/refs/heads/main/source2.lua'))()
 local keyWindow = Rayfield:CreateWindow({
@@ -56,37 +50,21 @@ keyTab:CreateInput({
 keyTab:CreateButton({
     Name = "Validate Key",
     Callback = function()
-        if not request then
-            Rayfield:Notify({Title = "Error", Content = "Seu executor não suporta requisições HTTP.", Duration = 5})
-            return
-        end
-
-        -- SUBSTITUA ESTA URL PELA SUA URL ATUAL DO NGROK
-        local ngrokUrl = "https://b46a5ef2d50d.ngrok-free.app"
-        local url = ngrokUrl .. "/validate"
-
-        local response = request({
-            Url = url,
-            Method = "POST",
-            Headers = { ["Content-Type"] = "application/json" },
-            Body = HttpService:JSONEncode({ key = userKey })
-        })
-
-        if response and response.Body then
-            local success, data = pcall(function()
-                return HttpService:JSONDecode(response.Body)
-            end)
-
-            if success and data and data.valid then
-                Rayfield:Notify({Title = "Success", Content = "Valid key! Welcome to Shift Hub.", Duration = 3})
-                Rayfield:Destroy()
-                wait(0.2)
-                openMainWindow()
-            else
-                Rayfield:Notify({Title = "Error", Content = "Invalid key! Try again.", Duration = 5})
-            end
+        if userKey == ".w9SUW_IL^Cq&JyldotWZrqMnVjRi4W3U" then
+            Rayfield:Notify({
+                Title = "Success",
+                Content = "Valid key! Welcome to Shift Hub.",
+                Duration = 3
+            })
+            Rayfield:Destroy()
+            wait(0.2)
+            openMainWindow()
         else
-            Rayfield:Notify({Title = "Error", Content = "Could not connect to server.", Duration = 5})
+            Rayfield:Notify({
+                Title = "Error",
+                Content = "Invalid key! Try again.",
+                Duration = 5
+            })
         end
     end
 })
@@ -99,9 +77,17 @@ keyTab:CreateButton({
         end)
 
         if success then
-            Rayfield:Notify({Title = "Link copied!", Content = "Discord link copied to clipboard. Paste in browser to join.", Duration = 5})
+            Rayfield:Notify({
+                Title = "Link copied!",
+                Content = "Discord link copied to clipboard. Paste in browser to join.",
+                Duration = 5
+            })
         else
-            Rayfield:Notify({Title = "Link de Convite", Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.", Duration = 7})
+            Rayfield:Notify({
+                Title = "Link de Convite",
+                Content = "https://discord.gg/mAn7k89V. Por favor, copie manualmente.",
+                Duration = 7
+            })
         end
     end
 })
@@ -241,6 +227,3 @@ function openMainWindow()
     mainWindow.Visible = true
     playSound(openSoundId)
 end
-
-
-
