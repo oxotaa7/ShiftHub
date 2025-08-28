@@ -110,63 +110,29 @@ function openMainWindow()
 
     -- Rollback Trait
     local rollbackEnabled = false
-    local blockedRemotes = {}
-    local inputConnections = {}
+
+    -- Hook do metatable
+    local mt = getrawmetatable(game)
+    setreadonly(mt, false)
+    local oldNamecall = mt.__namecall
+
+    mt.__namecall = function(self, ...)
+        if rollbackEnabled and (self:IsA("RemoteEvent") or self:IsA("RemoteFunction")) then
+            print("[Rollback] Bloqueado:", self.Name)
+            return nil
+        end
+        return oldNamecall(self, ...)
+    end
 
     mainTab:CreateToggle({
         Name = "Rollback Trait",
         CurrentValue = false,
         Callback = function(value)
             rollbackEnabled = value
-            print("Rollback Ativado.", value)
-
             if rollbackEnabled then
-                blockedRemotes = {}
-                for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
-                    if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-                        blockedRemotes[obj] = true
-                        if obj:IsA("RemoteEvent") then
-                            local originalFire = obj.FireServer
-                            obj.FireServer = function()
-                                print("[Rollback] RemoteEvent "..obj.Name.." bloqueado temporariamente")
-                            end
-                            blockedRemotes[obj] = {original = originalFire}
-                        elseif obj:IsA("RemoteFunction") then
-                            local originalInvoke = obj.InvokeServer
-                            obj.InvokeServer = function()
-                                print("[Rollback] RemoteFunction "..obj.Name.." bloqueado temporariamente")
-                            end
-                            blockedRemotes[obj] = {original = originalInvoke}
-                        end
-                    end
-                end
-
-                inputConnections.input = UserInputService.InputBegan:Connect(function(input, processed)
-                    if rollbackEnabled then
-                        wait(0.2)
-                    end
-                end)
-
+                print("Rollback Ativado.")
             else
-                for obj, data in pairs(blockedRemotes) do
-                    if obj and obj.Parent then
-                        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-                            if data.original then
-                                if obj:IsA("RemoteEvent") then
-                                    obj.FireServer = data.original
-                                elseif obj:IsA("RemoteFunction") then
-                                    obj.InvokeServer = data.original
-                                end
-                            end
-                        end
-                    end
-                end
-                blockedRemotes = {}
-
-                if inputConnections.input then
-                    inputConnections.input:Disconnect()
-                    inputConnections.input = nil
-                end
+                print("Rollback Desativado.")
             end
         end
     })
