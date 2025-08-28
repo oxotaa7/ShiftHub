@@ -8,6 +8,7 @@ end
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TeleportService = game:GetService("TeleportService")
 
 -- Sound IDs
 local openSoundId = "rbxassetid://84041558102940"
@@ -111,18 +112,23 @@ function openMainWindow()
     -- Rollback Trait
     local rollbackEnabled = false
 
-    -- Hook do metatable
+    -- Hook do metatable para rollback seguro
     local mt = getrawmetatable(game)
     setreadonly(mt, false)
     local oldNamecall = mt.__namecall
 
-    mt.__namecall = function(self, ...)
+    mt.__namecall = newcclosure(function(self, ...)
+        local method = getnamecallmethod()
         if rollbackEnabled and (self:IsA("RemoteEvent") or self:IsA("RemoteFunction")) then
             print("[Rollback] Bloqueado:", self.Name)
-            return nil
+            if self:IsA("RemoteFunction") and method == "InvokeServer" then
+                return false -- retorna algo válido para RemoteFunction
+            else
+                return nil -- RemoteEvent pode apenas ser bloqueado
+            end
         end
         return oldNamecall(self, ...)
-    end
+    end)
 
     mainTab:CreateToggle({
         Name = "Rollback Trait",
@@ -145,7 +151,7 @@ function openMainWindow()
                 wait(6)
                 Rayfield2:Notify({Title = "Rollback", Content = "Rollback feito com sucesso.", Duration = 3})
                 wait(3)
-                game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+                TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer)
             else
                 Rayfield2:Notify({Title = "Error", Content = "Rollback Trait não está ativado.", Duration = 3})
             end
@@ -159,7 +165,7 @@ function openMainWindow()
     configsTab:CreateButton({
         Name = "Rejoin",
         Callback = function()
-            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+            TeleportService:Teleport(game.PlaceId, game.Players.LocalPlayer)
         end
     })
 
